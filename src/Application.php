@@ -5,6 +5,7 @@ namespace Mix\Http;
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
 use Mix\Container\Container;
+use Mix\Helpers\FileSystemHelper;
 
 /**
  * App类
@@ -12,6 +13,12 @@ use Mix\Container\Container;
  */
 class Application extends \Mix\Core\Application
 {
+
+    // 公开目录路径
+    public $publicPath = 'public';
+
+    // 视图目录路径
+    public $viewPath = 'views';
 
     // 控制器命名空间
     public $controllerNamespace = '';
@@ -135,13 +142,25 @@ class Application extends \Mix\Core\Application
     // 获取公开目录路径
     public function getPublicPath()
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'public';
+        if (!FileSystemHelper::isAbsolute($this->publicPath)) {
+            if ($this->publicPath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->publicPath;
+        }
+        return $this->publicPath;
     }
 
     // 获取视图目录路径
     public function getViewPath()
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'views';
+        if (!FileSystemHelper::isAbsolute($this->viewPath)) {
+            if ($this->viewPath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->viewPath;
+        }
+        return $this->viewPath;
     }
 
     // 打印变量的相关信息
