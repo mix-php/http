@@ -6,7 +6,8 @@ use Mix\Core\Component;
 use Mix\Helpers\RandomStringHelper;
 
 /**
- * Session组件
+ * Class Session
+ * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Session extends Component

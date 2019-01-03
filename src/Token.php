@@ -6,7 +6,8 @@ use Mix\Core\Component;
 use Mix\Helpers\RandomStringHelper;
 
 /**
- * Token组件
+ * Class Token
+ * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Token extends Component
