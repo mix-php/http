@@ -20,7 +20,7 @@ class Token extends Component
 
     /**
      * 处理者
-     * @var \Mix\Redis\RedisConnection
+     * @var \Mix\Redis\RedisConnectionInterface
      */
     public $handler;
 
