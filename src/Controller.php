@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\BaseObject;
+use Mix\Core\DIObject;
 use Mix\Http\View;
 
 /**
  * Controller类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Controller extends BaseObject
+class Controller extends DIObject
 {
 
     // 默认布局

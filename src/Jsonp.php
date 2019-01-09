@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\BaseObject;
+use Mix\Core\DIObject;
 use Mix\Helpers\JsonHelper;
 
 /**
  * JSONP 类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Jsonp extends BaseObject
+class Jsonp extends DIObject
 {
 
     // callback键名

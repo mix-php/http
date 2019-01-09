@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\BaseObject;
+use Mix\Core\DIObject;
 use Mix\Helpers\XmlHelper;
 
 /**
  * Xml类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Xml extends BaseObject
+class Xml extends DIObject
 {
 
     // 编码
