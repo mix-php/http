@@ -31,7 +31,7 @@ class UploadFile
      * @param $name
      * @return $this
      */
-    public static function newInstanceByName($name)
+    public static function newInstance($name)
     {
         $file = \Mix::$app->request->files($name);
         return is_null($file) ? $file : new self($file);
