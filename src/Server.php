@@ -7,19 +7,41 @@ use Mix\Core\Coroutine;
 use Mix\Helpers\ProcessHelper;
 
 /**
- * Http服务器类
+ * Class Server
+ * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Server extends DIObject
 {
 
-    // 虚拟主机
-    public $virtualHost = [];
+    /**
+     * 主机
+     * @var string
+     */
+    public $host = '127.0.0.1';
 
-    // 运行参数
+    /**
+     * 端口
+     * @var int
+     */
+    public $port = 9501;
+
+    /**
+     * 配置文件
+     * @var string
+     */
+    public $configFile = '';
+
+    /**
+     * 运行参数
+     * @var array
+     */
     public $settings = [];
 
-    // 默认运行参数
+    /**
+     * 默认运行参数
+     * @var array
+     */
     protected $_settings = [
         // 开启协程
         'enable_coroutine' => false,
@@ -43,45 +65,41 @@ class Server extends DIObject
         'open_tcp_nodelay' => true,
     ];
 
-    // 服务器
+    /**
+     * 服务器
+     * @var \Swoole\Http\Server
+     */
     protected $_server;
 
-    // 主机
-    protected $_host;
-
-    // 端口
-    protected $_port;
-
-    // 初始化
-    protected function initialize()
-    {
-        // 初始化参数
-        $this->_host    = $this->virtualHost['host'];
-        $this->_port    = $this->virtualHost['port'];
-        $this->settings += $this->_settings;
-        // 实例化服务器
-        $this->_server = new \Swoole\Http\Server($this->_host, $this->_port);
-    }
-
-    // 启动服务
+    /**
+     * 启动服务
+     * @return bool
+     */
     public function start()
     {
-        $this->initialize();
+        // 欢迎信息
         $this->welcome();
+        // 绑定事件
         $this->onStart();
         $this->onManagerStart();
         $this->onWorkerStart();
         $this->onRequest();
-        $this->_server->set($this->settings);
-        $this->_server->start();
+        // 初始化
+        $this->_server   = new \Swoole\Http\Server($this->host, $this->port);
+        $this->_settings = $this->settings + $this->_settings;
+        $this->_server->set($this->_settings);
+        // 启动
+        return $this->_server->start();
     }
 
-    // 主进程启动事件
+    /**
+     * 主进程启动事件
+     */
     protected function onStart()
     {
         $this->_server->on('Start', function ($server) {
             // 进程命名
-            ProcessHelper::setProcessTitle("mix-httpd: master {$this->_host}:{$this->_port}");
+            ProcessHelper::setProcessTitle("mix-httpd: master {$this->host}:{$this->port}");
         });
     }
 
@@ -94,7 +112,9 @@ class Server extends DIObject
         });
     }
 
-    // 工作进程启动事件
+    /**
+     * 工作进程启动事件
+     */
     protected function onWorkerStart()
     {
         $this->_server->on('WorkerStart', function ($server, $workerId) {
@@ -105,12 +125,14 @@ class Server extends DIObject
                 ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化App
-            $config = require $this->virtualHost['configFile'];
+            $config = require $this->configFile;
             $app    = new \Mix\Http\Application($config);
         });
     }
 
-    // 请求事件
+    /**
+     * 请求事件
+     */
     protected function onRequest()
     {
         $this->_server->on('request', function ($request, $response) {
@@ -129,7 +151,9 @@ class Server extends DIObject
         });
     }
 
-    // 欢迎信息
+    /**
+     * 欢迎信息
+     */
     protected function welcome()
     {
         $swooleVersion = swoole_version();
@@ -149,13 +173,13 @@ EOL;
         println('Framework   Version:   ' . \Mix::VERSION);
         println("PHP         Version:   {$phpVersion}");
         println("Swoole      Version:   {$swooleVersion}");
-        println("Listen      Addr:      {$this->_host}");
-        println("Listen      Port:      {$this->_port}");
-        println('Reactor     Num:       ' . $this->settings['reactor_num']);
-        println('Worker      Num:       ' . $this->settings['worker_num']);
-        println('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enabled' : 'disabled'));
-        println('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enabled' : 'disabled'));
-        println("Config      File:      {$this->virtualHost['configFile']}");
+        println("Listen      Addr:      {$this->host}");
+        println("Listen      Port:      {$this->port}");
+        println('Reactor     Num:       ' . $this->_settings['reactor_num']);
+        println('Worker      Num:       ' . $this->_settings['worker_num']);
+        println('Hot         Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
+        println('Coroutine   Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
+        println("Config      File:      {$this->configFile}");
     }
 
 }
