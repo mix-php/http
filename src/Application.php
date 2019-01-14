@@ -118,6 +118,9 @@ class Application extends \Mix\Core\Application
     {
         // 触发请求后置事件
         foreach (array_keys($this->components) as $name) {
+            if (!$this->container->has($name)) {
+                continue;
+            }
             $component = $this->container->get($name);
             self::triggerRequestAfter($component);
         }

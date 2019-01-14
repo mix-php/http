@@ -106,9 +106,6 @@ class Error extends Component
     protected static function send($errors)
     {
         $statusCode = $errors['status'];
-        // 清空系统错误
-        ob_get_contents() and ob_clean();
-        // 错误响应
         if (!\Mix::$app->appDebug) {
             if ($statusCode == 404) {
                 $errors = [
