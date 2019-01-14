@@ -2,13 +2,13 @@
 
 namespace Mix\Http;
 
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 
 /**
  * Captcha类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Captcha extends DIObject
+class Captcha extends BeanObject
 {
 
     // 宽度

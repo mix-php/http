@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 use Mix\Core\Coroutine;
 use Mix\Helpers\ProcessHelper;
 
@@ -11,7 +11,7 @@ use Mix\Helpers\ProcessHelper;
  * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Server extends DIObject
+class Server extends BeanObject
 {
 
     /**

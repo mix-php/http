@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 use Mix\Helpers\JsonHelper;
 
 /**
  * JSON 类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Json extends DIObject
+class Json extends BeanObject
 {
 
     // 编码

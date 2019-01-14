@@ -2,13 +2,13 @@
 
 namespace Mix\Http;
 
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 
 /**
  * Pagination类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Pagination extends DIObject
+class Pagination extends BeanObject
 {
 
     // 内容
