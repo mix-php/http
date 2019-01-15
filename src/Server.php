@@ -72,22 +72,31 @@ class Server extends BeanObject
     protected $_server;
 
     /**
+     * 初始化事件
+     */
+    public function onInitialize()
+    {
+        parent::onInitialize();
+        // 初始化
+        $this->_server   = new \Swoole\Http\Server($this->host, $this->port);
+        $this->_settings = $this->settings + $this->_settings;
+    }
+
+    /**
      * 启动服务
      * @return bool
      */
     public function start()
     {
-        // 欢迎信息
-        $this->welcome();
         // 绑定事件
         $this->onStart();
         $this->onManagerStart();
         $this->onWorkerStart();
         $this->onRequest();
-        // 初始化
-        $this->_server   = new \Swoole\Http\Server($this->host, $this->port);
-        $this->_settings = $this->settings + $this->_settings;
+        // 配置参数
         $this->_server->set($this->_settings);
+        // 欢迎信息
+        $this->welcome();
         // 启动
         return $this->_server->start();
     }
