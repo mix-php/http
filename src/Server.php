@@ -30,7 +30,7 @@ class Server extends BeanObject
      * 配置文件
      * @var string
      */
-    public $configuration = '';
+    public $configurationFile = '';
 
     /**
      * 运行参数
@@ -134,7 +134,7 @@ class Server extends BeanObject
                 ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化App
-            $config = require $this->configuration;
+            $config = require $this->configurationFile;
             $app    = new \Mix\Http\Application($config);
         });
     }
@@ -188,7 +188,7 @@ EOL;
         println('Worker         Num:       ' . $this->_settings['worker_num']);
         println('Hot            Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
         println('Coroutine      Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
-        println("configuration  File:      {$this->configuration}");
+        println("configuration  File:      {$this->configurationFile}");
     }
 
 }
