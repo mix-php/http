@@ -107,8 +107,12 @@ class Server extends BeanObject
     protected function onStart()
     {
         $this->_server->on('Start', function ($server) {
-            // 进程命名
-            ProcessHelper::setProcessTitle("mix-httpd: master {$this->host}:{$this->port}");
+            try {
+                // 进程命名
+                ProcessHelper::setProcessTitle("mix-httpd: master {$this->host}:{$this->port}");
+            } catch (\Throwable $e) {
+                \Mix::$app->error->handleException($e);
+            }
         });
     }
 
@@ -116,8 +120,12 @@ class Server extends BeanObject
     protected function onManagerStart()
     {
         $this->_server->on('ManagerStart', function ($server) {
-            // 进程命名
-            ProcessHelper::setProcessTitle("mix-httpd: manager");
+            try {
+                // 进程命名
+                ProcessHelper::setProcessTitle("mix-httpd: manager");
+            } catch (\Throwable $e) {
+                \Mix::$app->error->handleException($e);
+            }
         });
     }
 
@@ -127,15 +135,19 @@ class Server extends BeanObject
     protected function onWorkerStart()
     {
         $this->_server->on('WorkerStart', function ($server, $workerId) {
-            // 进程命名
-            if ($workerId < $server->setting['worker_num']) {
-                ProcessHelper::setProcessTitle("mix-httpd: worker #{$workerId}");
-            } else {
-                ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
+            try {
+                // 进程命名
+                if ($workerId < $server->setting['worker_num']) {
+                    ProcessHelper::setProcessTitle("mix-httpd: worker #{$workerId}");
+                } else {
+                    ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
+                }
+                // 实例化App
+                $config = require $this->configurationFile;
+                new \Mix\Http\Application($config);
+            } catch (\Throwable $e) {
+                \Mix::$app->error->handleException($e);
             }
-            // 实例化App
-            $config = require $this->configurationFile;
-            $app    = new \Mix\Http\Application($config);
         });
     }
 
@@ -145,17 +157,17 @@ class Server extends BeanObject
     protected function onRequest()
     {
         $this->_server->on('request', function ($request, $response) {
-            // 执行请求
             try {
+                // 执行请求
                 \Mix::$app->request->setRequester($request);
                 \Mix::$app->response->setResponder($response);
                 \Mix::$app->run();
+                // 开启协程时，移除容器
+                if (($tid = Coroutine::id()) !== -1) {
+                    \Mix::$app->container->delete($tid);
+                }
             } catch (\Throwable $e) {
                 \Mix::$app->error->handleException($e);
-            }
-            // 开启协程时，移除容器
-            if (($tid = Coroutine::id()) !== -1) {
-                \Mix::$app->container->delete($tid);
             }
         });
     }
