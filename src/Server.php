@@ -30,7 +30,7 @@ class Server extends BeanObject
      * 配置文件
      * @var string
      */
-    public $configFile = '';
+    public $configuration = '';
 
     /**
      * 运行参数
@@ -134,7 +134,7 @@ class Server extends BeanObject
                 ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化App
-            $config = require $this->configFile;
+            $config = require $this->configuration;
             $app    = new \Mix\Http\Application($config);
         });
     }
@@ -177,18 +177,18 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 
 
 EOL;
-        println('Server      Name:      mix-httpd');
-        println('System      Name:      ' . strtolower(PHP_OS));
-        println('Framework   Version:   ' . \Mix::VERSION);
-        println("PHP         Version:   {$phpVersion}");
-        println("Swoole      Version:   {$swooleVersion}");
-        println("Listen      Addr:      {$this->host}");
-        println("Listen      Port:      {$this->port}");
-        println('Reactor     Num:       ' . $this->_settings['reactor_num']);
-        println('Worker      Num:       ' . $this->_settings['worker_num']);
-        println('Hot         Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
-        println('Coroutine   Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
-        println("Config      File:      {$this->configFile}");
+        println('Server         Name:      mix-httpd');
+        println('System         Name:      ' . strtolower(PHP_OS));
+        println('Framework      Version:   ' . \Mix::VERSION);
+        println("PHP            Version:   {$phpVersion}");
+        println("Swoole         Version:   {$swooleVersion}");
+        println("Listen         Addr:      {$this->host}");
+        println("Listen         Port:      {$this->port}");
+        println('Reactor        Num:       ' . $this->_settings['reactor_num']);
+        println('Worker         Num:       ' . $this->_settings['worker_num']);
+        println('Hot            Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
+        println('Coroutine      Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
+        println("configuration  File:      {$this->configuration}");
     }
 
 }
