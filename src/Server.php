@@ -79,14 +79,14 @@ class Server extends BeanObject
     {
         // 初始化
         $this->_server = new \Swoole\Http\Server($this->host, $this->port);
+        // 配置参数
+        $this->_settings = $this->settings + $this->_settings;
+        $this->_server->set($this->_settings);
         // 绑定事件
         $this->onStart();
         $this->onManagerStart();
         $this->onWorkerStart();
         $this->onRequest();
-        // 配置参数
-        $this->_settings = $this->settings + $this->_settings;
-        $this->_server->set($this->_settings);
         // 欢迎信息
         $this->welcome();
         // 启动
