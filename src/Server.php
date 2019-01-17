@@ -192,7 +192,7 @@ EOL;
         println('Worker         Num:       ' . $this->_settings['worker_num']);
         println('Hot            Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
         println('Coroutine      Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
-        println("configuration  File:      {$this->configurationFile}");
+        println("Configuration  File:      {$this->configurationFile}");
     }
 
 }
