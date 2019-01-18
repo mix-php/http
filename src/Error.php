@@ -34,7 +34,6 @@ class Error extends Component
 
     /**
      * 错误级别
-     * 只在 Apache/PHP-FPM 传统环境下有效
      * @var int
      */
     public $level = E_ALL;
