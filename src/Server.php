@@ -183,15 +183,15 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 EOL;
         println('Server         Name:      mix-httpd');
         println('System         Name:      ' . strtolower(PHP_OS));
-        println('Framework      Version:   ' . \Mix::$version);
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
+        println('Framework      Version:   ' . \Mix::$version);
+        println('Hot            Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
+        println('Coroutine      Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
         println("Listen         Addr:      {$this->host}");
         println("Listen         Port:      {$this->port}");
         println('Reactor        Num:       ' . $this->_settings['reactor_num']);
         println('Worker         Num:       ' . $this->_settings['worker_num']);
-        println('Hot            Update:    ' . ($this->_settings['max_request'] == 1 ? 'enabled' : 'disabled'));
-        println('Coroutine      Mode:      ' . ($this->_settings['enable_coroutine'] ? 'enabled' : 'disabled'));
         println("Configuration  File:      {$this->configurationFile}");
     }
 
