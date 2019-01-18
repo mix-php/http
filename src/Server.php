@@ -183,7 +183,7 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 EOL;
         println('Server         Name:      mix-httpd');
         println('System         Name:      ' . strtolower(PHP_OS));
-        println('Framework      Version:   ' . \Mix::VERSION);
+        println('Framework      Version:   ' . \Mix::$version);
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
         println("Listen         Addr:      {$this->host}");
