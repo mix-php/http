@@ -9,11 +9,17 @@ namespace Mix\Http\Compatible;
 class Response extends \Mix\Http\BaseResponse
 {
 
-    // 请求前置事件
-    public function onRequestBefore()
+    // 初始化事件
+    public function onInitialize()
     {
-        parent::onRequestBefore();
-        // 重置数据
+        parent::onInitialize();
+        // 初始化
+        $this->initialize();
+    }
+
+    // 初始化
+    protected function initialize()
+    {
         $this->format     = $this->defaultFormat;
         $this->statusCode = 200;
         $this->content    = '';

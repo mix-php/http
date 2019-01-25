@@ -13,6 +13,13 @@ class Request extends \Mix\Http\BaseRequest
     public function onInitialize()
     {
         parent::onInitialize();
+        // 初始化
+        $this->initialize();
+    }
+
+    // 初始化
+    protected function initialize()
+    {
         $this->_get    = $_GET;
         $this->_post   = $_POST;
         $this->_files  = $_FILES;

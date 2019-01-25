@@ -151,8 +151,8 @@ class Server extends BeanObject
         $this->_server->on('request', function ($request, $response) {
             try {
                 // 执行请求
-                \Mix::$app->request->setRequester($request);
-                \Mix::$app->response->setResponder($response);
+                \Mix::$app->request->initializeRequest($request);
+                \Mix::$app->response->initializeRequest($response);
                 \Mix::$app->run();
                 // 开启协程时，移除容器
                 if (($tid = Coroutine::id()) !== -1) {

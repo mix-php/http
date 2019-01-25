@@ -15,12 +15,12 @@ class Response extends BaseResponse
      */
     protected $_responder;
 
-    // 设置响应者
-    public function setResponder($responder)
+    // 针对每个请求执行初始化
+    public function initializeRequest($responder)
     {
         // 设置响应者
         $this->_responder = $responder;
-        // 重置数据
+        // 执行初始化
         $this->format     = $this->defaultFormat;
         $this->statusCode = 200;
         $this->content    = '';

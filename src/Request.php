@@ -9,14 +9,18 @@ namespace Mix\Http;
 class Request extends BaseRequest
 {
 
-    // 请求对象
+    /**
+     * 请求者
+     * @var \Swoole\Http\Request
+     */
     protected $_requester;
 
-    // 设置请求对象
-    public function setRequester($requester)
+    // 针对每个请求执行初始化
+    public function initializeRequest($requester)
     {
+        // 设置请求者
         $this->_requester = $requester;
-        // 重置数据
+        // 执行初始化
         $this->setRoute([]);
         $this->_get    = isset($requester->get) ? $requester->get : [];
         $this->_post   = isset($requester->post) ? $requester->post : [];
