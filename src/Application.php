@@ -96,8 +96,12 @@ class Application extends \Mix\Core\Application
     {
         $middleware = [];
         foreach (array_merge($this->middleware, $routeMiddleware) as $key => $name) {
-            $class            = "{$this->middlewareNamespace}\\{$name}Middleware";
-            $middleware[$key] = new $class();
+            $class  = "{$this->middlewareNamespace}\\{$name}Middleware";
+            $object = new $class();
+            if (!($object instanceof MiddlewareInterface)) {
+                throw new \RuntimeException("{$class} type is not 'Mix\Http\MiddlewareInterface'");
+            }
+            $middleware[$key] = $object;
         }
         return $middleware;
     }
