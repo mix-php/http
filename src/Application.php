@@ -111,7 +111,7 @@ class Application extends \Mix\Core\Application
     {
         // 从容器返回组件
         $component = $this->container->get($name);
-        // 触发请求前置事件
+        // 触发前置处理事件
         self::triggerBeforeRequest($component);
         // 返回组件
         return $component;
@@ -120,7 +120,7 @@ class Application extends \Mix\Core\Application
     // 清扫组件容器
     public function cleanComponents()
     {
-        // 触发请求后置事件
+        // 触发后置处理事件
         foreach (array_keys($this->components) as $name) {
             if (!$this->container->has($name)) {
                 continue;
@@ -130,19 +130,19 @@ class Application extends \Mix\Core\Application
         }
     }
 
-    // 触发请求前置事件
+    // 触发前置处理事件
     protected static function triggerBeforeRequest($component)
     {
         if ($component->getStatus() == Component::STATUS_READY) {
-            $component->onBeforeRequest();
+            $component->onBeforeInitialize();
         }
     }
 
-    // 触发请求后置事件
+    // 触发后置处理事件
     protected static function triggerAfterRequest($component)
     {
         if ($component->getStatus() == Component::STATUS_RUNNING) {
-            $component->onAfterRequest();
+            $component->onAfterInitialize();
         }
     }
 
