@@ -15,6 +15,14 @@ class Server extends BeanObject
 {
 
     /**
+     * 事件常量
+     */
+    const EVENT_START = 'start';
+    const EVENT_MANAGER_START = 'managerstart';
+    const EVENT_WORKER_START = 'workerstart';
+    const EVENT_REQUEST = 'request';
+
+    /**
      * 主机
      * @var string
      */
@@ -83,10 +91,10 @@ class Server extends BeanObject
         $this->_settings = $this->settings + $this->_settings;
         $this->_server->set($this->_settings);
         // 绑定事件
-        $this->onStart();
-        $this->onManagerStart();
-        $this->onWorkerStart();
-        $this->onRequest();
+        $this->_server->on(self::EVENT_START, [$this, 'onStart']);
+        $this->_server->on(self::EVENT_MANAGER_START, [$this, 'onManagerStart']);
+        $this->_server->on(self::EVENT_WORKER_START, [$this, 'onWorkerStart']);
+        $this->_server->on(self::EVENT_REQUEST, [$this, 'onRequest']);
         // 欢迎信息
         $this->welcome();
         // 启动
@@ -96,72 +104,64 @@ class Server extends BeanObject
     /**
      * 主进程启动事件
      */
-    protected function onStart()
+    protected function onStart($server)
     {
-        $this->_server->on('Start', function ($server) {
-            try {
-                // 进程命名
-                ProcessHelper::setProcessTitle("mix-httpd: master {$this->host}:{$this->port}");
-            } catch (\Throwable $e) {
-                \Mix::$app->error->handleException($e);
-            }
-        });
+        try {
+            // 进程命名
+            ProcessHelper::setProcessTitle("mix-httpd: master {$this->host}:{$this->port}");
+        } catch (\Throwable $e) {
+            \Mix::$app->error->handleException($e);
+        }
     }
 
     // 管理进程启动事件
-    protected function onManagerStart()
+    protected function onManagerStart($server)
     {
-        $this->_server->on('ManagerStart', function ($server) {
-            try {
-                // 进程命名
-                ProcessHelper::setProcessTitle("mix-httpd: manager");
-            } catch (\Throwable $e) {
-                \Mix::$app->error->handleException($e);
-            }
-        });
+        try {
+            // 进程命名
+            ProcessHelper::setProcessTitle("mix-httpd: manager");
+        } catch (\Throwable $e) {
+            \Mix::$app->error->handleException($e);
+        }
     }
 
     /**
      * 工作进程启动事件
      */
-    protected function onWorkerStart()
+    protected function onWorkerStart($server, $workerId)
     {
-        $this->_server->on('WorkerStart', function ($server, $workerId) {
-            try {
-                // 进程命名
-                if ($workerId < $server->setting['worker_num']) {
-                    ProcessHelper::setProcessTitle("mix-httpd: worker #{$workerId}");
-                } else {
-                    ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
-                }
-                // 实例化App
-                $config = require $this->configurationFile;
-                new \Mix\Http\Application($config);
-            } catch (\Throwable $e) {
-                \Mix::$app->error->handleException($e);
+        try {
+            // 进程命名
+            if ($workerId < $server->setting['worker_num']) {
+                ProcessHelper::setProcessTitle("mix-httpd: worker #{$workerId}");
+            } else {
+                ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
             }
-        });
+            // 实例化App
+            $config = require $this->configurationFile;
+            new \Mix\Http\Application($config);
+        } catch (\Throwable $e) {
+            \Mix::$app->error->handleException($e);
+        }
     }
 
     /**
      * 请求事件
      */
-    protected function onRequest()
+    protected function onRequest($request, $response)
     {
-        $this->_server->on('request', function ($request, $response) {
-            try {
-                // 执行请求
-                \Mix::$app->request->initializeRequest($request);
-                \Mix::$app->response->initializeRequest($response);
-                \Mix::$app->run();
-                // 开启协程时，移除容器
-                if (($tid = Coroutine::id()) !== -1) {
-                    \Mix::$app->container->delete($tid);
-                }
-            } catch (\Throwable $e) {
-                \Mix::$app->error->handleException($e);
+        try {
+            // 执行请求
+            \Mix::$app->request->initializeRequest($request);
+            \Mix::$app->response->initializeRequest($response);
+            \Mix::$app->run();
+            // 开启协程时，移除容器
+            if (($tid = Coroutine::id()) !== -1) {
+                \Mix::$app->container->delete($tid);
             }
-        });
+        } catch (\Throwable $e) {
+            \Mix::$app->error->handleException($e);
+        }
     }
 
     /**
