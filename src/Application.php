@@ -62,13 +62,10 @@ class Application extends \Mix\Core\Application
                 $controllerInstance = new $controllerClass();
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
-                    // 执行中间件
-                    $middleware = $this->newMiddlewareInstance($route['middleware']);
-                    if (!empty($middleware)) {
-                        return $this->runMiddleware([$controllerInstance, $controllerAction], $middleware);
-                    }
-                    // 直接返回执行结果
-                    return $controllerInstance->$controllerAction();
+                    // 通过中间件执行功能
+                    $middlewares = MiddlewareHandler::newInstances($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
+                    $callback    = [$controllerInstance, $controllerAction];
+                    return MiddlewareHandler::run($callback, $middlewares);
                 }
             }
             // 不带路由参数的路由规则找不到时，直接抛出错误
@@ -77,33 +74,6 @@ class Application extends \Mix\Core\Application
             }
         }
         throw new \Mix\Exceptions\NotFoundException('Not Found (#404)');
-    }
-
-    // 执行中间件
-    protected function runMiddleware($callable, $middleware)
-    {
-        $item = array_shift($middleware);
-        if (empty($item)) {
-            return call_user_func($callable);
-        }
-        return $item->handle($callable, function () use ($callable, $middleware) {
-            return $this->runMiddleware($callable, $middleware);
-        });
-    }
-
-    // 实例化中间件
-    protected function newMiddlewareInstance($routeMiddleware)
-    {
-        $middleware = [];
-        foreach (array_merge($this->middleware, $routeMiddleware) as $key => $name) {
-            $class  = "{$this->middlewareNamespace}\\{$name}Middleware";
-            $object = new $class();
-            if (!($object instanceof MiddlewareInterface)) {
-                throw new \RuntimeException("{$class} type is not 'Mix\Http\MiddlewareInterface'");
-            }
-            $middleware[$key] = $object;
-        }
-        return $middleware;
     }
 
     // 获取组件
