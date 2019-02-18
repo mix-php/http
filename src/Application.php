@@ -4,7 +4,6 @@ namespace Mix\Http;
 
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
-use Mix\Container\Container;
 use Mix\Helpers\FileSystemHelper;
 
 /**
