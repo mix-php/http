@@ -5,6 +5,7 @@ namespace Mix\Http;
 use Mix\Core\Component\Component;
 use Mix\Core\Coroutine\Coroutine;
 use Mix\Helpers\FileSystemHelper;
+use Mix\Http\Middleware\MiddlewareHandler;
 
 /**
  * App类

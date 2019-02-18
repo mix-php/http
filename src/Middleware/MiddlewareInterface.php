@@ -1,11 +1,11 @@
 <?php
 
-namespace Mix\Http;
+namespace Mix\Http\Middleware;
 
 /**
  * Interface MiddlewareInterface
  * @author LIUJIAN <coder.keda@gmail.com>
- * @package Mix\Http
+ * @package Mix\Http\Middleware
  */
 interface MiddlewareInterface
 {

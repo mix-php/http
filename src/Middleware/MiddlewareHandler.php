@@ -1,10 +1,10 @@
 <?php
 
-namespace Mix\Http;
+namespace Mix\Http\Middleware;
 
 /**
  * Class MiddlewareHandler
- * @package Mix\Http
+ * @package Mix\Http\Middleware
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class MiddlewareHandler
@@ -40,7 +40,7 @@ class MiddlewareHandler
             $class  = "{$namespace}\\{$name}Middleware";
             $object = new $class();
             if (!($object instanceof MiddlewareInterface)) {
-                throw new \RuntimeException("{$class} type is not 'Mix\Http\MiddlewareInterface'");
+                throw new \RuntimeException("{$class} type is not 'Mix\Http\Middleware\MiddlewareInterface'");
             }
             $instances[$key] = $object;
         }
