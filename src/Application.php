@@ -2,8 +2,8 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Component;
-use Mix\Core\Coroutine;
+use Mix\Core\Component\Component;
+use Mix\Core\Coroutine\Coroutine;
 use Mix\Helpers\FileSystemHelper;
 
 /**
