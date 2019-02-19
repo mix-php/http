@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Bean\BeanObject;
+use Mix\Core\Bean\AbstractObject;
 use Mix\Http\View;
 
 /**
  * Controller类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Controller extends BeanObject
+class Controller extends AbstractObject
 {
 
     // 默认布局

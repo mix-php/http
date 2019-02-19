@@ -2,14 +2,14 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Component\Component;
+use Mix\Core\Component\AbstractComponent;
 use Mix\Core\Component\ComponentInterface;
 
 /**
  * Route组件
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Route extends Component
+class Route extends AbstractComponent
 {
 
     // 协程模式

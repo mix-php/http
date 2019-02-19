@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Component\Component;
+use Mix\Core\Component\AbstractComponent;
 use Mix\Core\Component\ComponentInterface;
 use Mix\Http\View;
 
@@ -10,7 +10,7 @@ use Mix\Http\View;
  * Error类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Error extends Component
+class Error extends AbstractComponent
 {
 
     /**
