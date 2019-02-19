@@ -2,34 +2,50 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Component\Component;
-use Mix\Core\Coroutine\Coroutine;
 use Mix\Helpers\FileSystemHelper;
 use Mix\Http\Middleware\MiddlewareHandler;
 
 /**
- * App类
+ * Class Application
+ * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Application extends \Mix\Core\Application
+class Application extends BaseApplication
 {
 
-    // 公开目录路径
+    /**
+     * 公开目录路径
+     * @var string
+     */
     public $publicPath = 'public';
 
-    // 视图目录路径
+    /**
+     * 视图目录路径
+     * @var string
+     */
     public $viewPath = 'views';
 
-    // 控制器命名空间
+    /**
+     * 控制器命名空间
+     * @var string
+     */
     public $controllerNamespace = '';
 
-    // 中间件命名空间
+    /**
+     * 中间件命名空间
+     * @var string
+     */
     public $middlewareNamespace = '';
 
-    // 全局中间件
+    /**
+     * 全局中间件
+     * @var array
+     */
     public $middleware = [];
 
-    // 执行功能
+    /**
+     * 执行功能
+     */
     public function run()
     {
         $server                       = \Mix::$app->request->server();
@@ -39,7 +55,12 @@ class Application extends \Mix\Core\Application
         \Mix::$app->response->send();
     }
 
-    // 执行功能并返回
+    /**
+     * 执行功能并返回
+     * @param $method
+     * @param $action
+     * @return mixed
+     */
     public function runAction($method, $action)
     {
         $action = "{$method} {$action}";
@@ -76,47 +97,10 @@ class Application extends \Mix\Core\Application
         throw new \Mix\Exceptions\NotFoundException('Not Found (#404)');
     }
 
-    // 获取组件
-    public function __get($name)
-    {
-        // 从容器返回组件
-        $component = $this->container->get($name);
-        // 触发前置处理事件
-        self::triggerBeforeRequest($component);
-        // 返回组件
-        return $component;
-    }
-
-    // 清扫组件容器
-    public function cleanComponents()
-    {
-        // 触发后置处理事件
-        foreach (array_keys($this->components) as $name) {
-            if (!$this->container->has($name)) {
-                continue;
-            }
-            $component = $this->container->get($name);
-            self::triggerAfterRequest($component);
-        }
-    }
-
-    // 触发前置处理事件
-    protected static function triggerBeforeRequest($component)
-    {
-        if ($component->getStatus() == Component::STATUS_READY) {
-            $component->onBeforeInitialize();
-        }
-    }
-
-    // 触发后置处理事件
-    protected static function triggerAfterRequest($component)
-    {
-        if ($component->getStatus() == Component::STATUS_RUNNING) {
-            $component->onAfterInitialize();
-        }
-    }
-
-    // 获取公开目录路径
+    /**
+     * 获取公开目录路径
+     * @return string
+     */
     public function getPublicPath()
     {
         if (!FileSystemHelper::isAbsolute($this->publicPath)) {
@@ -128,7 +112,10 @@ class Application extends \Mix\Core\Application
         return $this->publicPath;
     }
 
-    // 获取视图目录路径
+    /**
+     * 获取视图目录路径
+     * @return string
+     */
     public function getViewPath()
     {
         if (!FileSystemHelper::isAbsolute($this->viewPath)) {
@@ -138,24 +125,6 @@ class Application extends \Mix\Core\Application
             return $this->basePath . DIRECTORY_SEPARATOR . $this->viewPath;
         }
         return $this->viewPath;
-    }
-
-    // 打印变量的相关信息
-    public function dump($var, $send = false)
-    {
-        ob_start();
-        var_dump($var);
-        $dumpContent                  = ob_get_clean();
-        \Mix::$app->response->content .= $dumpContent;
-        if ($send) {
-            throw new \Mix\Exceptions\DebugException(\Mix::$app->response->content);
-        }
-    }
-
-    // 终止程序
-    public function end($content = '')
-    {
-        throw new \Mix\Exceptions\EndException($content);
     }
 
 }
