@@ -4,14 +4,19 @@ namespace Mix\Http;
 
 use Mix\Helpers\FileSystemHelper;
 use Mix\Http\Middleware\MiddlewareHandler;
+use Mix\Http\Application\ComponentInitializeTrait;
+use Mix\Http\Application\DebugTrait;
 
 /**
  * Class Application
  * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Application extends BaseApplication
+class Application extends \Mix\Core\Application
 {
+
+    use ComponentInitializeTrait;
+    use DebugTrait;
 
     /**
      * 公开目录路径

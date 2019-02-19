@@ -1,13 +1,13 @@
 <?php
 
-namespace Mix\Http;
+namespace Mix\Http\Application;
 
 /**
- * Class BaseApplication
- * @package Mix\Http
+ * Trait ComponentInitializeTrait
+ * @package Mix\Http\Application
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class BaseApplication extends \Mix\Core\Application
+trait ComponentInitializeTrait
 {
 
     /**
@@ -60,31 +60,6 @@ class BaseApplication extends \Mix\Core\Application
         if ($component->getStatus() == Component::STATUS_RUNNING) {
             $component->onAfterInitialize();
         }
-    }
-
-    /**
-     * 打印变量的相关信息
-     * @param $var
-     * @param bool $send
-     */
-    public function dump($var, $send = false)
-    {
-        ob_start();
-        var_dump($var);
-        $dumpContent                  = ob_get_clean();
-        \Mix::$app->response->content .= $dumpContent;
-        if ($send) {
-            throw new \Mix\Exceptions\DebugException(\Mix::$app->response->content);
-        }
-    }
-
-    /**
-     * 终止程序
-     * @param string $content
-     */
-    public function end($content = '')
-    {
-        throw new \Mix\Exceptions\EndException($content);
     }
 
 }
