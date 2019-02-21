@@ -2,6 +2,8 @@
 
 namespace Mix\Http\Application;
 
+use Mix\Core\Component\ComponentInterface;
+
 /**
  * Trait ComponentInitializeTrait
  * @package Mix\Http\Application
@@ -46,7 +48,7 @@ trait ComponentInitializeTrait
      */
     protected static function triggerBeforeInitialize($component)
     {
-        if ($component->getStatus() == Component::STATUS_READY) {
+        if ($component->getStatus() == ComponentInterface::STATUS_READY) {
             $component->onBeforeInitialize();
         }
     }
@@ -57,7 +59,7 @@ trait ComponentInitializeTrait
      */
     protected static function triggerAfterInitialize($component)
     {
-        if ($component->getStatus() == Component::STATUS_RUNNING) {
+        if ($component->getStatus() == ComponentInterface::STATUS_RUNNING) {
             $component->onAfterInitialize();
         }
     }
