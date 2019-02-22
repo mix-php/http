@@ -1,16 +1,16 @@
 <?php
 
-namespace Mix\Http;
+namespace Mix\Http\View;
 
 use Mix\Core\Bean\AbstractObject;
 use Mix\Http\View;
 
 /**
- * Class AbstractController
+ * Trait ViewTrait
  * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class AbstractController extends AbstractObject
+trait ViewTrait
 {
 
     /**
