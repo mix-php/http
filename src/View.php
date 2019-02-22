@@ -3,16 +3,25 @@
 namespace Mix\Http;
 
 /**
- * View类
+ * Class View
+ * @package Mix\Http
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class View
 {
 
-    // 标题
+    /**
+     * 标题
+     * @var string
+     */
     public $title;
 
-    // 渲染视图
+    /**
+     * 渲染视图
+     * @param $__template__
+     * @param $__data__
+     * @return string
+     */
     public function render($__template__, $__data__)
     {
         // 传入变量
@@ -25,6 +34,21 @@ class View
         ob_start();
         include $__filepath__;
         return ob_get_clean();
+    }
+
+    /**
+     * 获取视图前缀
+     * @param AbstractController $controller
+     * @return string
+     */
+    public static function prefix(\Mix\Http\AbstractController $controller)
+    {
+        $prefix = str_replace([\Mix::$app->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($controller));
+        $items  = [];
+        foreach (explode('.', $prefix) as $item) {
+            $items[] = \Mix\Helpers\NameHelper::camelToSnake($item);
+        }
+        return implode('.', $items);
     }
 
 }
