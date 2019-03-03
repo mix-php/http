@@ -22,7 +22,7 @@ trait DebugTrait
         $dumpContent                  = ob_get_clean();
         \Mix::$app->response->content .= $dumpContent;
         if ($send) {
-            throw new \Mix\Exceptions\DebugException(\Mix::$app->response->content);
+            throw new \Mix\Exception\DebugException(\Mix::$app->response->content);
         }
     }
 
@@ -32,7 +32,7 @@ trait DebugTrait
      */
     public function end($content = '')
     {
-        throw new \Mix\Exceptions\EndException($content);
+        throw new \Mix\Exception\EndException($content);
     }
 
 }

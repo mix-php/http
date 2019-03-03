@@ -29,7 +29,7 @@ class View
         // 生成视图
         $__filepath__ = \Mix::$app->getViewPath() . DIRECTORY_SEPARATOR . str_replace('.', DIRECTORY_SEPARATOR, $__template__) . '.php';
         if (!is_file($__filepath__)) {
-            throw new \Mix\Exceptions\ViewException("视图文件不存在：{$__filepath__}");
+            throw new \Mix\Exception\ViewException("视图文件不存在：{$__filepath__}");
         }
         ob_start();
         include $__filepath__;
@@ -46,7 +46,7 @@ class View
         $prefix = str_replace([\Mix::$app->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($controller));
         $items  = [];
         foreach (explode('.', $prefix) as $item) {
-            $items[] = \Mix\Helpers\NameHelper::camelToSnake($item);
+            $items[] = \Mix\Helper\NameHelper::camelToSnake($item);
         }
         return implode('.', $items);
     }

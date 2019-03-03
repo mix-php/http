@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Helpers\FileSystemHelper;
+use Mix\Helper\FileSystemHelper;
 use Mix\Http\Middleware\MiddlewareHandler;
 use Mix\Http\Application\ComponentInitializeTrait;
 use Mix\Http\Application\DebugTrait;
@@ -77,11 +77,11 @@ class Application extends \Mix\Core\Application
             \Mix::$app->request->setRoute($queryParams);
             // 实例化控制器
             list($shortClass, $shortAction) = $route;
-            $controllerDir    = \Mix\Helpers\FileSystemHelper::dirname($shortClass);
+            $controllerDir    = \Mix\Helper\FileSystemHelper::dirname($shortClass);
             $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
-            $controllerName   = \Mix\Helpers\NameHelper::snakeToCamel(\Mix\Helpers\FileSystemHelper::basename($shortClass), true);
+            $controllerName   = \Mix\Helper\NameHelper::snakeToCamel(\Mix\Helper\FileSystemHelper::basename($shortClass), true);
             $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
-            $shortAction      = \Mix\Helpers\NameHelper::snakeToCamel($shortAction, true);
+            $shortAction      = \Mix\Helper\NameHelper::snakeToCamel($shortAction, true);
             $controllerAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($controllerClass)) {
@@ -99,7 +99,7 @@ class Application extends \Mix\Core\Application
                 break;
             }
         }
-        throw new \Mix\Exceptions\NotFoundException('Not Found (#404)');
+        throw new \Mix\Exception\NotFoundException('Not Found (#404)');
     }
 
     /**
