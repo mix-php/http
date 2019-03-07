@@ -74,9 +74,10 @@ class Error extends AbstractComponent
         $message .= "[type] {$errors['type']} [code] {$errors['code']}" . PHP_EOL;
         $message .= "[file] {$errors['file']} [line] {$errors['line']}" . PHP_EOL;
         $message .= "[trace] {$errors['trace']}" . PHP_EOL;
-        $message .= '$_SERVER' . substr(print_r(\Mix::$app->request->server() + \Mix::$app->request->header(), true), 5);
-        $message .= '$_GET' . substr(print_r(\Mix::$app->request->get(), true), 5);
-        $message .= '$_POST' . substr(print_r(\Mix::$app->request->post(), true), 5, -1);
+        $message .= '$SERVER' . substr(print_r(\Mix::$app->request->server(), true), 5);
+        $message .= '$HEADER' . substr(print_r(\Mix::$app->request->header(), true), 5);
+        $message .= '$GET' . substr(print_r(\Mix::$app->request->get(), true), 5);
+        $message .= '$POST' . substr(print_r(\Mix::$app->request->post(), true), 5, -1);
         // 写入
         $errorType = \Mix\Core\Error::getType($errors['code']);
         switch ($errorType) {
