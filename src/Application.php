@@ -3,7 +3,6 @@
 namespace Mix\Http;
 
 use Mix\Helper\FileSystemHelper;
-use Mix\Http\Middleware\MiddlewareHandler;
 use Mix\Core\Application\ComponentInitializeTrait;
 
 /**
@@ -29,31 +28,12 @@ class Application extends \Mix\Core\Application
     public $viewPath = 'views';
 
     /**
-     * 控制器命名空间
-     * @var string
-     */
-    public $controllerNamespace = '';
-
-    /**
-     * 中间件命名空间
-     * @var string
-     */
-    public $middlewareNamespace = '';
-
-    /**
-     * 全局中间件
-     * @var array
-     */
-    public $middleware = [];
-
-    /**
      * 执行功能
      */
     public function run()
     {
-        $server                       = \Mix::$app->request->server();
-        $method                       = strtoupper($server['request_method']);
-        $action                       = empty($server['path_info']) ? '' : substr($server['path_info'], 1);
+        $method = \Mix::$app->request->server('request_method', 'GET');
+        $action = \Mix::$app->request->server('path_info', '/');
         \Mix::$app->response->content = $this->runAction($method, $action);
         \Mix::$app->response->send();
     }
@@ -66,38 +46,8 @@ class Application extends \Mix\Core\Application
      */
     public function runAction($method, $action)
     {
-        $action = "{$method} {$action}";
-        // 路由匹配
-        $result = \Mix::$app->route->match($action);
-        foreach ($result as $item) {
-            list($route, $queryParams) = $item;
-            // 路由参数导入请求类
-            \Mix::$app->request->setRoute($queryParams);
-            // 实例化控制器
-            list($shortClass, $shortAction) = $route;
-            $controllerDir    = \Mix\Helper\FileSystemHelper::dirname($shortClass);
-            $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
-            $controllerName   = \Mix\Helper\NameHelper::snakeToCamel(\Mix\Helper\FileSystemHelper::basename($shortClass), true);
-            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
-            $shortAction      = \Mix\Helper\NameHelper::snakeToCamel($shortAction, true);
-            $controllerAction = "action{$shortAction}";
-            // 判断类是否存在
-            if (class_exists($controllerClass)) {
-                $controllerInstance = new $controllerClass();
-                // 判断方法是否存在
-                if (method_exists($controllerInstance, $controllerAction)) {
-                    // 通过中间件执行功能
-                    $middlewares = MiddlewareHandler::newInstances($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
-                    $callback    = [$controllerInstance, $controllerAction];
-                    return MiddlewareHandler::run($callback, $middlewares);
-                }
-            }
-            // 不带路由参数的路由规则找不到时，直接抛出错误
-            if (empty($queryParams)) {
-                break;
-            }
-        }
-        throw new \Mix\Exception\NotFoundException('Not Found (#404)');
+        $rule = "{$method} {$action}";
+        return \Mix::$app->route->handle($rule);
     }
 
     /**

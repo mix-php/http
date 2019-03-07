@@ -43,7 +43,7 @@ class View
      */
     public static function prefix(\Mix\Http\AbstractController $controller)
     {
-        $prefix = str_replace([\Mix::$app->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($controller));
+        $prefix = str_replace([\Mix::$app->route->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($controller));
         $items  = [];
         foreach (explode('.', $prefix) as $item) {
             $items[] = \Mix\Helper\NameHelper::camelToSnake($item);
