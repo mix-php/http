@@ -104,7 +104,7 @@ class Error extends AbstractComponent
             if ($statusCode == 404) {
                 $errors = [
                     'status'  => 404,
-                    'message' => $e->getMessage(),
+                    'message' => $errors['message'],
                 ];
             }
             if ($statusCode == 500) {
