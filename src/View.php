@@ -38,10 +38,10 @@ class View
 
     /**
      * 获取视图前缀
-     * @param AbstractController $controller
+     * @param $controller
      * @return string
      */
-    public static function prefix(\Mix\Http\AbstractController $controller)
+    public static function prefix($controller)
     {
         $prefix = str_replace([\Mix::$app->route->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($controller));
         $items  = [];
