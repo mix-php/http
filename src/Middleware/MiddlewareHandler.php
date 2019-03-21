@@ -12,18 +12,19 @@ class MiddlewareHandler
 
     /**
      * 执行中间件
-     * @param callable $callable
+     * @param callable $callback
+     * @param array $params
      * @param array $middlewares
      * @return mixed
      */
-    public static function run(callable $callable, array $middlewares)
+    public static function run(callable $callback, array $params, array $middlewares)
     {
         $item = array_shift($middlewares);
         if (empty($item)) {
-            return call_user_func($callable, \Mix::$app->request, \Mix::$app->response);
+            return call_user_func_array($callback, $params);
         }
-        return $item->handle($callable, function () use ($callable, $middlewares) {
-            return self::run($callable, $middlewares);
+        return $item->handle($callback, function () use ($callback, $params, $middlewares) {
+            return self::run($callback, $params, $middlewares);
         });
     }
 
@@ -37,7 +38,7 @@ class MiddlewareHandler
     {
         $instances = [];
         foreach ($middlewares as $key => $name) {
-            $class = "{$namespace}\\{$name}Middleware";
+            $class  = "{$namespace}\\{$name}Middleware";
             $object = new $class();
             if (!($object instanceof MiddlewareInterface)) {
                 throw new \RuntimeException("{$class} type is not 'Mix\Http\Middleware\MiddlewareInterface'");

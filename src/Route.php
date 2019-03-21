@@ -195,7 +195,7 @@ class Route extends AbstractComponent
                     // 通过中间件执行功能
                     $middlewares = MiddlewareHandler::newInstances($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
                     $callback    = [$controllerInstance, $controllerAction];
-                    return MiddlewareHandler::run($callback, $middlewares);
+                    return MiddlewareHandler::run($callback, [\Mix::$app->request, \Mix::$app->response], $middlewares);
                 }
             }
             // 不带路由参数的路由规则找不到时，直接抛出错误
