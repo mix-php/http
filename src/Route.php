@@ -193,10 +193,8 @@ class Route extends AbstractComponent
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
                     // 通过中间件执行功能
-                    $middlewares = MiddlewareHandler::newInstances($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
-                    $callback    = [$controllerInstance, $controllerAction];
-                    $params      = [\Mix::$app->request, \Mix::$app->response];
-                    return MiddlewareHandler::run($callback, $params, $middlewares);
+                    $handler = MiddlewareHandler::new($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
+                    return $handler->run([$controllerInstance, $controllerAction], \Mix::$app->request, \Mix::$app->response);
                 }
             }
             // 不带路由参数的路由规则找不到时，直接抛出错误
