@@ -8,7 +8,7 @@ use Mix\Core\Application\ComponentInitializeTrait;
 /**
  * Class Application
  * @package Mix\Http
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class Application extends \Mix\Core\Application
 {
