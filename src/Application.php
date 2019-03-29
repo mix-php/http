@@ -2,6 +2,7 @@
 
 namespace Mix\Http;
 
+use Mix\Core\Middleware\MiddlewareHandler;
 use Mix\Helper\FileSystemHelper;
 use Mix\Core\Application\ComponentInitializeTrait;
 
@@ -47,7 +48,10 @@ class Application extends \Mix\Core\Application
     public function runAction($method, $action)
     {
         $rule = "{$method} {$action}";
-        return \Mix::$app->route->handle($rule);
+        list($callback, $middleware) = \Mix::$app->route->getActionContent($rule);
+        // 通过中间件执行功能
+        $handler = MiddlewareHandler::new($this->route->middlewareNamespace, $middleware);
+        return $handler->run($callback, \Mix::$app->request, \Mix::$app->response);
     }
 
     /**

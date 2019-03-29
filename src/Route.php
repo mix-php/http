@@ -4,7 +4,6 @@ namespace Mix\Http;
 
 use Mix\Core\Component\AbstractComponent;
 use Mix\Core\Component\ComponentInterface;
-use Mix\Core\Middleware\MiddlewareHandler;
 
 /**
  * Class Route
@@ -83,7 +82,7 @@ class Route extends AbstractComponent
         foreach ($this->rules as $rule => $route) {
             $rules[$rule] = $route;
             if (strpos($rule, '{controller}') !== false && strpos($rule, '{action}') !== false) {
-                $prev    = dirname($rule);
+                $prev = dirname($rule);
                 $prevTwo = dirname($prev);
                 $prevTwo = $prevTwo == '.' ? '/' : $prevTwo;
                 $prevTwo = $prevTwo == '\\' ? '/' : $prevTwo;
@@ -95,7 +94,7 @@ class Route extends AbstractComponent
                 ];
                 // 附上中间件
                 if (isset($route['middleware'])) {
-                    $prevRules[$prev]['middleware']    = $route['middleware'];
+                    $prevRules[$prev]['middleware'] = $route['middleware'];
                     $prevRules[$prevTwo]['middleware'] = $route['middleware'];
                 }
                 $rules += $prevRules;
@@ -106,12 +105,12 @@ class Route extends AbstractComponent
             if ($blank = strpos($rule, ' ')) {
                 $method = substr($rule, 0, $blank);
                 $method = "(?:{$method}) ";
-                $rule   = substr($rule, $blank + 1);
+                $rule = substr($rule, $blank + 1);
             } else {
                 $method = '(?:CLI|GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) ';
             }
             $fragment = explode('/', $rule);
-            $names    = [];
+            $names = [];
             foreach ($fragment as $k => $v) {
                 preg_match('/{([\w-]+)}/i', $v, $matches);
                 if (!empty($matches)) {
@@ -124,7 +123,7 @@ class Route extends AbstractComponent
                     $names[] = $fname;
                 }
             }
-            $pattern            = '/^' . $method . implode('\/', $fragment) . '\/*$/i';
+            $pattern = '/^' . $method . implode('\/', $fragment) . '\/*$/i';
             $this->_materials[] = [$pattern, $route, $names];
         }
     }
@@ -147,7 +146,7 @@ class Route extends AbstractComponent
                     $queryParams[$v] = $matches[$k + 1];
                 }
                 // 替换路由中的变量
-                $fragments   = explode('/', $route[0]);
+                $fragments = explode('/', $route[0]);
                 $fragments[] = $route[1];
                 foreach ($fragments as $k => $v) {
                     preg_match('/{([\w-]+)}/i', $v, $matches);
@@ -160,19 +159,19 @@ class Route extends AbstractComponent
                 }
                 // 记录参数
                 $shortAction = array_pop($fragments);
-                $shortClass  = implode('\\', $fragments);
-                $result[]    = [[$shortClass, $shortAction, 'middleware' => isset($route['middleware']) ? $route['middleware'] : []], $queryParams];
+                $shortClass = implode('\\', $fragments);
+                $result[] = [[$shortClass, $shortAction, 'middleware' => isset($route['middleware']) ? $route['middleware'] : []], $queryParams];
             }
         }
         return $result;
     }
 
     /**
-     * 处理
+     * 获取执行内容
      * @param $rule
-     * @return mixed
+     * @return array
      */
-    public function handle($rule)
+    public function getActionContent($rule)
     {
         $result = \Mix::$app->route->match($rule);
         foreach ($result as $item) {
@@ -181,20 +180,19 @@ class Route extends AbstractComponent
             \Mix::$app->request->setRoute($queryParams);
             // 实例化控制器
             list($shortClass, $shortAction) = $route;
-            $controllerDir    = \Mix\Helper\FileSystemHelper::dirname($shortClass);
-            $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
-            $controllerName   = \Mix\Helper\NameHelper::snakeToCamel(\Mix\Helper\FileSystemHelper::basename($shortClass), true);
-            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
-            $shortAction      = \Mix\Helper\NameHelper::snakeToCamel($shortAction, true);
+            $controllerDir = \Mix\Helper\FileSystemHelper::dirname($shortClass);
+            $controllerDir = $controllerDir == '.' ? '' : "$controllerDir\\";
+            $controllerName = \Mix\Helper\NameHelper::snakeToCamel(\Mix\Helper\FileSystemHelper::basename($shortClass), true);
+            $controllerClass = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
+            $shortAction = \Mix\Helper\NameHelper::snakeToCamel($shortAction, true);
             $controllerAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($controllerClass)) {
                 $controllerInstance = new $controllerClass();
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
-                    // 通过中间件执行功能
-                    $handler = MiddlewareHandler::new($this->middlewareNamespace, array_merge($this->middleware, $route['middleware']));
-                    return $handler->run([$controllerInstance, $controllerAction], \Mix::$app->request, \Mix::$app->response);
+                    // 返回
+                    return [[$controllerInstance, $controllerAction], array_merge($this->middleware, $route['middleware'])];
                 }
             }
             // 不带路由参数的路由规则找不到时，直接抛出错误
