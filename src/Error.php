@@ -122,13 +122,13 @@ EOL;
         \Mix::$app->response->content    = $content;
         switch ($format) {
             case self::FORMAT_HTML:
-                \Mix::$app->response->format = \Mix\Http\Message\Response::FORMAT_HTML;
+                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_HTML;
                 break;
             case self::FORMAT_JSON:
-                \Mix::$app->response->format = \Mix\Http\Message\Response::FORMAT_JSON;
+                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_JSON;
                 break;
             case self::FORMAT_XML:
-                \Mix::$app->response->format = \Mix\Http\Message\Response::FORMAT_XML;
+                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_XML;
                 break;
         }
         \Mix::$app->response->send();
