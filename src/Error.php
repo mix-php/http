@@ -30,7 +30,7 @@ class Error extends AbstractComponent
      * 输出格式
      * @var string
      */
-    public $format = self::FORMAT_HTML;
+    public $format = static::FORMAT_HTML;
 
     /**
      * 错误级别
@@ -57,10 +57,10 @@ class Error extends AbstractComponent
         ];
         // 日志处理
         if (!($e instanceof \Mix\Exception\NotFoundException)) {
-            self::log($errors);
+            static::log($errors);
         }
         // 发送客户端
-        self::send($errors);
+        static::send($errors);
     }
 
     /**
@@ -119,13 +119,13 @@ class Error extends AbstractComponent
         \Mix::$app->response->statusCode = $statusCode;
         \Mix::$app->response->content    = $content;
         switch ($format) {
-            case self::FORMAT_HTML:
+            case static::FORMAT_HTML:
                 \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_HTML;
                 break;
-            case self::FORMAT_JSON:
+            case static::FORMAT_JSON:
                 \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_JSON;
                 break;
-            case self::FORMAT_XML:
+            case static::FORMAT_XML:
                 \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_XML;
                 break;
         }
