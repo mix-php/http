@@ -110,26 +110,92 @@ class Error extends AbstractComponent
                 ];
             }
         }
-        $format                          = \Mix::$app->error->format;
-        $tpl                             = [
-            404 => "errors.{$format}.not_found",
-            500 => "errors.{$format}.internal_server_error",
-        ];
-        $content                         = (new View())->render($tpl[$statusCode], $errors);
         \Mix::$app->response->statusCode = $statusCode;
-        \Mix::$app->response->content    = $content;
-        switch ($format) {
+        switch (\Mix::$app->error->format) {
             case static::FORMAT_HTML:
-                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_HTML;
+                \Mix::$app->response->content = static::html($errors);
+                \Mix::$app->response->format  = \Mix\Http\Message\Response\HttpResponse::FORMAT_HTML;
                 break;
             case static::FORMAT_JSON:
-                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_JSON;
+                \Mix::$app->response->content = static::json($errors);
+                \Mix::$app->response->format  = \Mix\Http\Message\Response\HttpResponse::FORMAT_JSON;
                 break;
             case static::FORMAT_XML:
-                \Mix::$app->response->format = \Mix\Http\Message\Response\HttpResponse::FORMAT_XML;
+                \Mix::$app->response->content = static::xml($errors);
+                \Mix::$app->response->format  = \Mix\Http\Message\Response\HttpResponse::FORMAT_XML;
                 break;
         }
         \Mix::$app->response->send();
+    }
+
+    /**
+     * 生成html
+     * @param $errors
+     * @return string
+     */
+    protected static function html($errors)
+    {
+        $tpl = [
+            404 => "errors.not_found",
+            500 => "errors.internal_server_error",
+        ];
+        return (new View())->render($tpl[$errors['status']], $errors);
+    }
+
+    /**
+     * 生成json
+     * @param $errors
+     * @return string
+     */
+    protected static function json($errors)
+    {
+        // 转换trace格式
+        if (isset($errors['trace'])) {
+            $tmp = [];
+            foreach (explode("\n", $errors['trace']) as $key => $item) {
+                $tmp[strstr($item, ' ', true)] = trim(strstr($item, ' '));
+            }
+            $errors['trace'] = $tmp;
+        }
+        // 生成
+        $content = '';
+        switch ($errors['status']) {
+            case 404:
+                $content = \Mix\Helper\JsonHelper::encode($errors);
+                break;
+            case 500:
+                $content = \Mix\Helper\JsonHelper::encode(['status' => $errors['status'], 'message' => $errors['message']]);
+                break;
+        }
+        return $content;
+    }
+
+    /**
+     * 生成xml
+     * @param $errors
+     * @return string
+     */
+    protected static function xml($errors)
+    {
+        // 转换trace格式
+        if (isset($errors['trace'])) {
+            $tmp = [];
+            foreach (explode("\n", $errors['trace']) as $key => $item) {
+                $tmp['item' . substr(strstr($item, ' ', true), 1)] = trim(strstr($item, ' '));
+            }
+            $errors['trace'] = $tmp;
+        }
+        // 生成
+        $content = '';
+        switch ($errors['status']) {
+            case 404:
+                $content = \Mix\Helper\XmlHelper::encode($errors);
+                break;
+            case 500:
+                $content = \Mix\Helper\XmlHelper::encode(['status' => $errors['status'], 'message' => $errors['message']]);
+                break;
+        }
+        return $content;
     }
 
 }
