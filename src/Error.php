@@ -30,7 +30,7 @@ class Error extends AbstractComponent
      * 输出格式
      * @var string
      */
-    public $format = static::FORMAT_HTML;
+    public $format = self::FORMAT_HTML;
 
     /**
      * 错误级别
