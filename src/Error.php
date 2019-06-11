@@ -7,7 +7,8 @@ use Mix\Core\Component\ComponentInterface;
 use Mix\Http\View;
 
 /**
- * Error类
+ * Class Error
+ * @package Mix\Http
  * @author liu,jian <coder.keda@gmail.com>
  */
 class Error extends AbstractComponent
