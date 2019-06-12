@@ -159,16 +159,7 @@ class Error extends AbstractComponent
             $errors['trace'] = $tmp;
         }
         // 生成
-        $content = '';
-        switch ($errors['status']) {
-            case 404:
-                $content = \Mix\Helper\JsonHelper::encode($errors);
-                break;
-            case 500:
-                $content = \Mix\Helper\JsonHelper::encode(['status' => $errors['status'], 'message' => $errors['message']]);
-                break;
-        }
-        return $content;
+        return \Mix\Helper\JsonHelper::encode($errors, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -187,16 +178,7 @@ class Error extends AbstractComponent
             $errors['trace'] = $tmp;
         }
         // 生成
-        $content = '';
-        switch ($errors['status']) {
-            case 404:
-                $content = \Mix\Helper\XmlHelper::encode($errors);
-                break;
-            case 500:
-                $content = \Mix\Helper\XmlHelper::encode(['status' => $errors['status'], 'message' => $errors['message']]);
-                break;
-        }
-        return $content;
+        return \Mix\Helper\XmlHelper::encode($errors);
     }
 
 }
