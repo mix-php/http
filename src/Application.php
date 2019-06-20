@@ -4,7 +4,6 @@ namespace Mix\Http;
 
 use Mix\Core\Middleware\MiddlewareHandler;
 use Mix\Helper\FileSystemHelper;
-use Mix\Core\Application\ComponentInitializeTrait;
 
 /**
  * Class Application
@@ -13,8 +12,6 @@ use Mix\Core\Application\ComponentInitializeTrait;
  */
 class Application extends \Mix\Core\Application
 {
-
-    use ComponentInitializeTrait;
 
     /**
      * 公开目录路径
