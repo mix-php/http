@@ -2,7 +2,7 @@
 
 namespace Mix\Http\View;
 
-use Mix\Core\Bean\AbstractObject;
+use Mix\Bean\Object\AbstractObject;
 use Mix\Http\View;
 
 /**
