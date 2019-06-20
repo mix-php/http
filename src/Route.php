@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Core\Component\AbstractComponent;
+use Mix\Component\AbstractComponent;
 use Mix\Core\Component\ComponentInterface;
 
 /**
