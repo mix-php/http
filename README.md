@@ -1,4 +1,4 @@
-## Mix WebSocket Daemon
+## Mix Http
 
 v2.1 has been deprecated
 
