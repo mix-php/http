@@ -120,7 +120,7 @@ class Route extends AbstractComponent
                     } else {
                         $fragment[$k] = str_replace("{$fname}", "({$this->defaultPattern})", $fragment[$k]);
                     }
-                    $names[] = $fname;
+                    $names[] = substr($fname, 1, -1);
                 }
             }
             $pattern = '/^' . $method . implode('\/', $fragment) . '\/*$/i';
