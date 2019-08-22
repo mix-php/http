@@ -113,15 +113,17 @@ class Route extends AbstractComponent
             $names = [];
             foreach ($fragment as $k => $v) {
                 preg_match('/{([\w-]+)}/i', $v, $matches);
-                if (!empty($matches)) {
-                    list($fname) = $matches;
-                    if (isset($this->patterns[$fname])) {
-                        $fragment[$k] = str_replace("{$fname}", "({$this->patterns[$fname]})", $fragment[$k]);
-                    } else {
-                        $fragment[$k] = str_replace("{$fname}", "({$this->defaultPattern})", $fragment[$k]);
-                    }
-                    $names[] = substr($fname, 1, -1);
+                if (empty($matches)) {
+                    continue;
                 }
+                list($fname) = $matches;
+                $fname = substr($fname, 1, -1);
+                if (isset($this->patterns[$fname])) {
+                    $fragment[$k] = str_replace('{' . $fname . '}', "({$this->patterns[$fname]})", $fragment[$k]);
+                } else {
+                    $fragment[$k] = str_replace('{' . $fname . '}', "({$this->defaultPattern})", $fragment[$k]);
+                }
+                $names[] = $fname;
             }
             $pattern = '/^' . $method . implode('\/', $fragment) . '\/*$/i';
             $this->_materials[] = [$pattern, $route, $names];
@@ -152,6 +154,7 @@ class Route extends AbstractComponent
                     preg_match('/{([\w-]+)}/i', $v, $matches);
                     if (!empty($matches)) {
                         list($fname) = $matches;
+                        $fname = substr($fname, 1, -1);
                         if (isset($queryParams[$fname])) {
                             $fragments[$k] = $queryParams[$fname];
                         }
